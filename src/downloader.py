@@ -8,33 +8,33 @@ import requests
 VERSION = "0.1.0"
 QUERY_ENDPOINT = "https://osusearch.com/query"
 DOWNLOAD_BASE = "https://osu.ppy.sh/beatmapsets"
+DOWNLOAD_SUFFIX = "download?noVideo=1"
 
-def get_download_urls(query: str, offset: int) \
-        -> Generator[Union[int, str], None, None]:
+def search(query: str, offset: int) -> dict:
     response = requests.get(f"{QUERY_ENDPOINT}/?{query}&offset={offset}")
-    response.raise_for_status() # TODO: Handle raised exceptions.
-    data: dict = response.json()
+    response.raise_for_status()  # TODO: Handle raised exceptions.
 
-    if offset == 0:
-        yield int(data["result_count"])
+    return response.json()
 
-    for beatmap in data["beatmaps"]:
-        yield f"{DOWNLOAD_BASE}/{beatmap['beatmapset_id']}/download?noVideo=1"
+def get_download_urls(results: dict) -> Generator[str, None, None]:
+    for beatmap in results["beatmaps"]:
+        yield f"{DOWNLOAD_BASE}/{beatmap['beatmapset_id']}/{DOWNLOAD_SUFFIX}"
+
+def get_max_offset(results: dict) -> int:
+    # Each request returns at most 18 beatmaps. Floor division is used because
+    # the count includes offset 0's results and the offset is 0-based.
+    return results["result_count"] // 18
 
 def get_all_urls(url: str) -> Generator[str, None, None]:
     query: str = urlparse(url).query
 
-    # Offset 0 yields result_count first.
-    first_resp = get_download_urls(query, 0)
-
-    # Each request returns at most 18 beatmaps. Floor division is used because
-    # the count includes offset 0's results and the offset is 0-based.
-    max_offset: int = next(first_resp) // 18
-
-    yield from first_resp # The remainder of the generator contains the urls.
+    result: dict = search(query, 0) # Offset 0 has correct result_count.
+    max_offset: int = get_max_offset(result)
+    yield from get_download_urls(result)
 
     for offset in range(1, max_offset + 1):
-        yield from get_download_urls(query, offset)
+        result = search(query, offset)
+        yield from get_download_urls(result)
 
 if __name__ == "__main__":
     arg_parser = ArgumentParser(
