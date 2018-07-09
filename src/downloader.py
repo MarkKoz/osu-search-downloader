@@ -1,7 +1,6 @@
 from argparse import ArgumentParser
 from typing import Generator, Union
 from urllib.parse import urlparse
-import math
 import sys
 
 import requests
@@ -28,8 +27,9 @@ def get_all_urls(url: str) -> Generator[str, None, None]:
     # Offset 0 yields result_count first.
     first_resp = get_download_urls(query, 0)
 
-    # Each request returns at most 18 beatmaps.
-    max_offset: int = math.ceil(next(first_resp) / 18)
+    # Each request returns at most 18 beatmaps. Floor division is used because
+    # the count includes offset 0's results and the offset is 0-based.
+    max_offset: int = next(first_resp) // 18
 
     yield from first_resp # The remainder of the generator contains the urls.
 
@@ -46,9 +46,9 @@ if __name__ == "__main__":
         dest="file_path",
         help="Path to a file to create and to which to write the URLs.")
     arg_parser.add_argument(
-            "-v", "--version",
-            action="version",
-            version=f"%(prog)s {VERSION}")
+        "-v", "--version",
+        action="version",
+        version=f"%(prog)s {VERSION}")
     args = arg_parser.parse_args()
 
     # Prints to stdout if a file path isn't specified.
