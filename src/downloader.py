@@ -7,7 +7,7 @@ import sys
 def get_download_urls(query: str, offset: int):
     response = requests.get(f"https://osusearch.com/query/?{query}&offset={offset}")
     response.raise_for_status() # Raises an exception if unsuccessful. TODO: Handle exceptions.
-    data = req.json()
+    data = response.json()
 
     if offset == 0:
         yield int(data["result_count"])
