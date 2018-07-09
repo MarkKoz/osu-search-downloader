@@ -12,13 +12,13 @@ writing them to a file.
     system's `PATH` environment variable.
 
 ### Installation
-Simply extract the archive.
+Download the program from [releases](https://github.com/MarkKoz/osu-search-downloader/releases) and simply extract the archive. For the latest features, instead clone the repository or download the ZIP.
 
 ### Basic Usage
 Run `downloader.py` to run the program:
 
 ```bash
-python downloader.py url
+python downloader.py "https://osusearch.com/search/"
 ```
 
 For more detailed usage, see help with the `-h` flag.
