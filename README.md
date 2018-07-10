@@ -34,18 +34,18 @@ pipenv install
 Alternatively, the required packages can be installed with [pip](https://pip.pypa.io/en/stable/quickstart/).
 
 ### Basic Usage
-Run `downloader.py` to run the program. If using pipenv:
+Run `main.py` or the package name, `osudownloader`, to run the program. If using
+pipenv:
 
 ```bash
 pipenv shell
-cd src
-python downloader.py "https://osusearch.com/search/"
+python osudownloader "https://osusearch.com/search/"
 ```
 
 otherwise
 
 ```bash
-python downloader.py "https://osusearch.com/search/"
+python osudownloader "https://osusearch.com/search/"
 ```
 
 For more detailed usage, see help with the `-h` flag.
