@@ -1,40 +1,25 @@
 from argparse import ArgumentParser
-from typing import Generator, Union
-from urllib.parse import urlparse
+from typing import FrozenSet, Generator, Optional
 import sys
 
-import requests
+from beatmap_filter import BeatmapFilter
+from searcher import Searcher
 
-VERSION = "0.1.0"
-QUERY_ENDPOINT = "https://osusearch.com/query"
-DOWNLOAD_BASE = "https://osu.ppy.sh/beatmapsets"
-DOWNLOAD_SUFFIX = "download?noVideo=1"
+VERSION = "0.2.0"
 
-def search(query: str, offset: int) -> dict:
-    response = requests.get(f"{QUERY_ENDPOINT}/?{query}&offset={offset}")
-    response.raise_for_status()  # TODO: Handle raised exceptions.
+def get_urls(url: str, songs_path: Optional[str]) -> Generator[str, None, None]:
+    search: Searcher = Searcher(url)
+    existing_ids: Optional[FrozenSet[int]] = None
+    skip_count: int = 0
 
-    return response.json()
+    if songs_path:
+        existing_ids = frozenset(BeatmapFilter(songs_path).get_existing_ids())
 
-def get_download_urls(results: dict) -> Generator[str, None, None]:
-    for beatmap in results["beatmaps"]:
-        yield f"{DOWNLOAD_BASE}/{beatmap['beatmapset_id']}/{DOWNLOAD_SUFFIX}"
-
-def get_max_offset(results: dict) -> int:
-    # Each request returns at most 18 beatmaps. Floor division is used because
-    # the count includes offset 0's results and the offset is 0-based.
-    return results["result_count"] // 18
-
-def get_all_urls(url: str) -> Generator[str, None, None]:
-    query: str = urlparse(url).query
-
-    result: dict = search(query, 0) # Offset 0 has correct result_count.
-    max_offset: int = get_max_offset(result)
-    yield from get_download_urls(result)
-
-    for offset in range(1, max_offset + 1):
-        result = search(query, offset)
-        yield from get_download_urls(result)
+    for beatmap in search.get_ids():
+        if existing_ids and beatmap in existing_ids:
+            skip_count += 1
+        else:
+            yield f"https://osu.ppy.sh/beatmapsets/{beatmap}/download?noVideo=1"
 
 if __name__ == "__main__":
     arg_parser = ArgumentParser(
@@ -46,6 +31,11 @@ if __name__ == "__main__":
         dest="file_path",
         help="Path to a file to create and to which to write the URLs.")
     arg_parser.add_argument(
+        "-s", "--songs-path",
+        dest="songs_path",
+        help="Path to osu!'s 'Songs' directory. If specified, existing "
+             "beatmaps won't be downloaded.")
+    arg_parser.add_argument(
         "-v", "--version",
         action="version",
         version=f"%(prog)s {VERSION}")
@@ -54,7 +44,7 @@ if __name__ == "__main__":
     # Prints to stdout if a file path isn't specified.
     file = open(args.file_path, "w") if args.file_path else sys.stdout
 
-    for url in get_all_urls(args.url):
+    for url in get_urls(args.url, args.songs_path):
         print(url, file=file)
 
     file.close()
