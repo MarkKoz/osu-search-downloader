@@ -4,8 +4,11 @@ import re
 
 from searcher import Searcher
 
+# TODO: Move to a config file.
+DOWNLOAD_URL = "https://osu.ppy.sh/beatmapsets/{id}/download?noVideo=1"
+
 def _get_existing_ids(songs_path: str) -> Generator[int, None, None]:
-    path: Path = Path(songs_path).resolve(strict = True)
+    path: Path = Path(songs_path).resolve(strict=True)
 
     if not path.is_dir():
         raise IsADirectoryError
@@ -17,15 +20,15 @@ def _get_existing_ids(songs_path: str) -> Generator[int, None, None]:
             yield int(match.group(1))
 
 def get_urls(url: str, songs_path: Optional[str]) -> Generator[str, None, None]:
-    search: Searcher = Searcher(url)
+    searcher: Searcher = Searcher(url)
     existing_ids: Optional[FrozenSet[int]] = None
     skip_count: int = 0
 
     if songs_path:
         existing_ids = frozenset(_get_existing_ids(songs_path))
 
-    for beatmap in search.get_ids():
-        if existing_ids and beatmap in existing_ids:
+    for beatmap in searcher.search():
+        if existing_ids and beatmap.id in existing_ids:
             skip_count += 1
         else:
-            yield f"https://osu.ppy.sh/beatmapsets/{beatmap}/download?noVideo=1"
+            yield DOWNLOAD_URL.format(id=beatmap.id)

@@ -8,6 +8,7 @@ name = "pypi"
 [packages]
 
 requests = "*"
+related = "*"
 
 
 [dev-packages]
