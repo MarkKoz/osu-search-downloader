@@ -14,6 +14,7 @@ writing them to a file.
 #### Packages
 > **Note** `pipenv` can install these automatically from the provided pipfiles.
 
+* [related](https://pypi.org/project/related/)
 * [requests](http://docs.python-requests.org/en/master/)
 * `OPTIONAL` [pipenv](https://docs.pipenv.org/)
 
@@ -31,21 +32,21 @@ dependencies from the pipfile with
 pipenv install
 ```
 
-Alternatively, the required packages can be installed with [pip](https://pip.pypa.io/en/stable/quickstart/).
+Alternatively, the required packages can be installed with
+[pip](https://pip.pypa.io/en/stable/quickstart/).
 
 ### Basic Usage
-Run `main.py` or the package name, `osudownloader`, to run the program. If using
+Execute the `osudownloader` module to run the program. If using
 pipenv:
 
 ```bash
-pipenv shell
-python osudownloader "https://osusearch.com/search/"
+pipenv run osd "https://osusearch.com/search/"
 ```
 
 otherwise
 
 ```bash
-python osudownloader "https://osusearch.com/search/"
+python -m osudownloader "https://osusearch.com/search/"
 ```
 
 For more detailed usage, see help with the `-h` flag.
