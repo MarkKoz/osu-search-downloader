@@ -1,0 +1,7 @@
+[flake8]
+max-line-length=80
+application_import_names=osudownloader
+exclude=__pycache__, .venv
+ignore=W503
+import-order-style=pycharm
+inline-quotes = "
