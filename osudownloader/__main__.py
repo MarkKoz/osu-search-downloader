@@ -3,6 +3,6 @@
 Downloads all beatmaps from osu!search results.
 """
 
-from main import main
+from osudownloader.main import main
 
 main()

@@ -1,8 +1,7 @@
 from typing import Dict, Generator
 from urllib.parse import parse_qs, urlparse
 
-from osu.client import OsuClient
-from osu.models import Beatmap, SearchResults
+from osudownloader.osu import Beatmap, OsuClient, SearchResults
 
 
 class Searcher:

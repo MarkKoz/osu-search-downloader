@@ -2,7 +2,7 @@ import re
 from pathlib import Path
 from typing import Generator, Optional
 
-from searcher import Searcher
+from osudownloader import Searcher
 
 # TODO: Move to a config file.
 DOWNLOAD_URL = "https://osu.ppy.sh/beatmapsets/{id}/download?noVideo=1"

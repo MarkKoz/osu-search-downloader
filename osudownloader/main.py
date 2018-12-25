@@ -7,8 +7,8 @@ Downloads all beatmaps from osu!search results.
 import sys
 from argparse import ArgumentParser
 
-import __init__ as osd
-import parsing
+import osudownloader as osd
+from osudownloader import parsing
 
 
 def main():
@@ -38,7 +38,3 @@ def main():
         print(url, file=file)
 
     file.close()
-
-
-if __name__ == "__main__":
-    main()
