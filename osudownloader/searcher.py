@@ -1,4 +1,4 @@
-from typing import Dict, Generator, Optional
+from typing import Dict, Generator
 from urllib.parse import parse_qs, urlparse
 
 from osu.client import OsuClient
