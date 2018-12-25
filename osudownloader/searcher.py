@@ -11,17 +11,17 @@ class Searcher:
 
     def _get_results(self, offset: int) -> SearchResults:
         response = OsuClient.query_beatmaps(self.query, offset)
-        results: Optional[bytes] = response.content
+        results = response.content
 
         return SearchResults.from_json(results)
 
     def search(self) -> Generator[Beatmap, None, None]:
         # Offset 0 has correct result_count.
-        results: SearchResults = self._get_results(0)
+        results = self._get_results(0)
 
         # Each request returns at most 18 beatmaps. Floor division is used
         # because the count includes offset 0's results and offset is 0-based.
-        max_offset: int = results.result_count // 18
+        max_offset = results.result_count // 18
 
         yield from results.beatmaps
 

@@ -1,6 +1,6 @@
 import re
 from pathlib import Path
-from typing import FrozenSet, Generator, Optional
+from typing import Generator, Optional
 
 from searcher import Searcher
 
@@ -9,7 +9,7 @@ DOWNLOAD_URL = "https://osu.ppy.sh/beatmapsets/{id}/download?noVideo=1"
 
 
 def _get_existing_ids(songs_path: str) -> Generator[int, None, None]:
-    path: Path = Path(songs_path).resolve(strict=True)
+    path = Path(songs_path).resolve(strict=True)
 
     if not path.is_dir():
         raise IsADirectoryError
@@ -22,8 +22,8 @@ def _get_existing_ids(songs_path: str) -> Generator[int, None, None]:
 
 
 def get_urls(url: str, songs_path: Optional[str]) -> Generator[str, None, None]:
-    searcher: Searcher = Searcher(url)
-    existing_ids: Optional[FrozenSet[int]] = None
+    searcher = Searcher(url)
+    existing_ids = None
     skip_count: int = 0
 
     if songs_path:

@@ -5,7 +5,7 @@ import requests
 
 class OsuClient:
     # TODO: Move to a config file.
-    QUERY_ENDPOINT: str = "https://osusearch.com/query/"
+    QUERY_ENDPOINT = "https://osusearch.com/query/"
 
     @staticmethod
     def query_beatmaps(query: Dict[str, str], offset: int) -> requests.Response:
