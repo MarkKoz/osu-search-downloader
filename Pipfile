@@ -15,4 +15,5 @@ related = "*"
 "flake8-quotes" = "*"
 
 [scripts]
+osd = "python -m osudownloader"
 lint = "python -m flake8"
