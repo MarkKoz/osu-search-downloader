@@ -12,7 +12,7 @@ def _get_existing_ids(songs_path: str) -> Generator[int, None, None]:
     path = Path(songs_path).resolve(strict=True)
 
     if not path.is_dir():
-        raise IsADirectoryError
+        raise NotADirectoryError
 
     for beatmap in path.iterdir():
         match = re.match(r"(\d+) ", beatmap.name)
