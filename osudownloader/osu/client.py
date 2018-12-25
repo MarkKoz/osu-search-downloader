@@ -1,14 +1,16 @@
+from typing import Dict
+
 import requests
 
 
 class OsuClient:
     # TODO: Move to a config file.
-    QUERY_ENDPOINT: str = "https://osusearch.com/query/?{query}&offset={offset}"
+    QUERY_ENDPOINT: str = "https://osusearch.com/query/"
 
     @staticmethod
-    def query_beatmaps(query: str, offset: int) -> requests.Response:
-        url: str = OsuClient.QUERY_ENDPOINT.format(query=query, offset=offset)
-        response: requests.Response = requests.get(url)
+    def query_beatmaps(query: Dict[str, str], offset: int) -> requests.Response:
+        query["offset"] = offset
+        response = requests.get(OsuClient.QUERY_ENDPOINT, params=query)
         response.raise_for_status()  # TODO: Handle raised exceptions.
 
         return response

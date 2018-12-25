@@ -1,5 +1,5 @@
-from typing import Generator, Optional
-from urllib.parse import urlparse
+from typing import Dict, Generator, Optional
+from urllib.parse import parse_qs, urlparse
 
 from osu.client import OsuClient
 from osu.models import Beatmap, SearchResults
@@ -7,7 +7,7 @@ from osu.models import Beatmap, SearchResults
 
 class Searcher:
     def __init__(self, url: str):
-        self.query: str = urlparse(url).query
+        self.query: Dict[str, str] = self._parse_query(url)
 
     def _get_results(self, offset: int) -> SearchResults:
         response = OsuClient.query_beatmaps(self.query, offset)
@@ -29,3 +29,10 @@ class Searcher:
             results = self._get_results(offset)
 
             yield from results.beatmaps
+
+    @staticmethod
+    def _parse_query(url: str) -> Dict[str, str]:
+        query = urlparse(url).query
+        query = parse_qs(query)
+
+        return query
