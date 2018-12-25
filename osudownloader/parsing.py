@@ -1,11 +1,12 @@
+import re
 from pathlib import Path
 from typing import FrozenSet, Generator, Optional
-import re
 
 from searcher import Searcher
 
 # TODO: Move to a config file.
 DOWNLOAD_URL = "https://osu.ppy.sh/beatmapsets/{id}/download?noVideo=1"
+
 
 def _get_existing_ids(songs_path: str) -> Generator[int, None, None]:
     path: Path = Path(songs_path).resolve(strict=True)
@@ -18,6 +19,7 @@ def _get_existing_ids(songs_path: str) -> Generator[int, None, None]:
 
         if match:
             yield int(match.group(1))
+
 
 def get_urls(url: str, songs_path: Optional[str]) -> Generator[str, None, None]:
     searcher: Searcher = Searcher(url)

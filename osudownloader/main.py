@@ -4,11 +4,12 @@
 Downloads all beatmaps from osu!search results.
 """
 
-from argparse import ArgumentParser
 import sys
+from argparse import ArgumentParser
 
 import __init__ as osd
 import parsing
+
 
 def main():
     arg_parser = ArgumentParser(
@@ -34,9 +35,10 @@ def main():
     file = open(args.file_path, "w") if args.file_path else sys.stdout
 
     for url in parsing.get_urls(args.url, args.songs_path):
-        print(url, file = file)
+        print(url, file=file)
 
     file.close()
+
 
 if __name__ == "__main__":
     main()

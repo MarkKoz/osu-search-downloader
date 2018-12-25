@@ -4,6 +4,7 @@ from urllib.parse import urlparse
 from osu.client import OsuClient
 from osu.models import Beatmap, SearchResults
 
+
 class Searcher:
     def __init__(self, url: str):
         self.query: str = urlparse(url).query
